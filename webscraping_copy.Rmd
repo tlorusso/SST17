@@ -1,0 +1,210 @@
+---
+title: "Webscraping mit R"
+subtitle: "Airbnb im Kanton Zürich"
+author: "Thomas Lo Russo, Statistisches Amt des Kantons Zürich"
+date: "2017/11/21"
+output:
+  xaringan::moon_reader:
+    css: libs/testzh.css
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      self_contained: false
+---
+#Inhalt
+
+1. Webscraping als ad-hoc Erhebungsmethode
+2. R-packages & Ressourcen
+3. Airbnb im Kanton Zürich
+
+---
+#Delivering the evidence of
+#tomorrow
+
+[Power from Statistics Conference, Brussels, 18-19.10.2017](https://powerfromstatistics.eu/power-from-statistics)
+
+Welche Rolle kommt der öffentlichen Statistik in Zukunft zu? 
+Wie kann sie dem Informationsbedürfnis der Gesellschaft auch künftig gerecht werden?
+
+--
+Auch über im Internet erhobene Daten (**Web-data**) wurde debatiert:
+
+<blockquote class="twitter-tweet" data-lang="de"><p lang="en" dir="ltr">Web data aren’t going replace official stats but they complement what is already there <a href="https://twitter.com/jonsteinberg?ref_src=twsrc%5Etfw">@jonsteinberg</a> <a href="https://twitter.com/hashtag/powerfromstatistics?src=hash&amp;ref_src=twsrc%5Etfw">#powerfromstatistics</a></p>&mdash; Roeland Beerten (@roelandb) <a href="https://twitter.com/roelandb/status/921002714804445184?ref_src=twsrc%5Etfw">19. Oktober 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+---
+#Neue Herausforderungen
+###für die öffentliche Statistik
+
+Im Zeitalter der Digitalisierung gibt es eine Vielzahl Phänomene, welche mittels konventioneller Erhebungsverfahren nur beschränkt eingefangen werden können. 
+
+→ **Online Plattform Economy**: (Airbnb, Uber etc.)
+--
+
+###Optionen<br>
+--
+
+Status Quo beibehalten<br>
+
+.footnote[[Blick Artikel: "Tourismus-Statistiker ignorieren Airbnb",5.11.2017](https://www.blick.ch/news/wirtschaft/weniger-gaeste-von-wegen-tourismus-statistiker-ignorieren-airbnb-id7556436.html)]
+
+--
+
+Plattformen zur Datenherausgabe bewegen<br>
+--
+
+Regulieren & Erhebung konzipieren<br>
+--
+
+→ Web-Scraping<br>
+
+---
+class: inverse, center, middle
+background-image: url(libs/noentry.png)
+background-position: 50% 10%
+background-size: 80%
+---
+###WebData - was gilt es zu beachten
+
+Ist es überhaupt zulässig im Netz Daten zu sammeln?
+
+Einschätzung zur Situation in der Schweiz:
+
+https://www.mll-news.com/verwertung-fremder-datenbanken-im-schweizer-recht/
+
+Empfehlung: **Verhaltensregeln der Webseiten-anbieter befolgen!**
+
+Quasi-standard: digitale Hausordnung für Suchroboter
+
+→ robots.txt! 
+
+Beispiel: https://www.airbnb.ch/robots.txt?locale=de
+
+---
+class: inverse, center, middle
+background-image: url(libs/go.png)
+background-position: 50% 10%
+background-size: 80%
+
+---
+class: inverse, center, middle
+background-image: url(libs/60.png)
+background-position: 50% 10%
+background-size: 80%
+
+---
+class: inverse, center, middle
+
+#Webscraping in R
+---
+
+#Scraping-Strategien
+- Human Copy-Paste
+- DOM Parsing
+- Text pattern matching (unstructured data)
+- **API Interface**
+
+###Ressourcen für R
+
+R bietet unzählige Ressourcen für Webscraping, welche unterschiedliche Funktionalitäten bieten.
+
+- Retrieving and parsing html <a href="https://cran.r-project.org/web/packages/rvest/rvest.pdf">rvest</a>
+
+- Crawling, retrieving and parsing <a href="https://cran.r-project.org/web/packages/Rcrawler/Rcrawler.pdf">RCrawler</a>
+
+
+Weitere: scrapeR, tm.plugin.webmining
+
+**Parsing only:** jsonlite, RJSONIO, tidyjson, XML, XML2
+---
+#Beispiel Airbnb
+**Problem:** Airbnb-API ist kein 'Datenservice' welcher alle Resultate für eine Abfrage liefert. Die API liefert die selben Resultate wie die Suchmaske auf der Webseite. Pro Suchabfrage: max. 300 Angebote.
+
+**Lösung:** Automatisierte Abfragen über Preiskategorien, Postleitzahlen, Kapazität etc.
+
+```{r eval=F, tidy=FALSE}
+baseurl <- "https://api.airbnb.com/v2/search_results?client_id=3092nxybyb0otqw18e8nh5nty&_limit=50&fetch_facets=true&guests=1&ib=false&sort=1&locale=de-CH&&zoom=10"
+
+library(jsonlite)
+#Zur Veranschaulichung (Skript unvollständig):
+#URL muss für automatisierte Abfragen dynamisch erweitert werden
+
+for (plz in lastplz:nrow(ortzh)){ #Loop über PLZ/Ort Liste
+for (p in c(seq(20,100,20),seq(200,500,100),seq(500,1000,250))){ #Loop über Preiskategorien
+for (i in seq(0,350,50)){#Loop über Seitenindex der Suchresultate
+  
+  zhlist <- fromJSON(paste0(baseurl,"&sort=1&_offset=",i ,"&&location=",ortzh$ORTNAME2[plz],"-",ortzh$PLZ4[plz],"-ZH")) #flatten=TRUE
+
+  ...
+}}}  
+```
+
+---
+```{r eval=F, tidy=FALSE}
+Retrieving listings 0 max price:20 PLZ:  8607, NUMBER of listings retrived: 365
+Retrieving listings 50 max price:20 PLZ:  8607, NUMBER of listings retrived: 370
+Retrieving listings 0 max price:40 PLZ:  8607, NUMBER of listings retrived: 372
+Retrieving listings 50 max price:40 PLZ:  8607, NUMBER of listings retrived: 382
+Retrieving listings 0 max price:60 PLZ:  8607, NUMBER of listings retrived: 382
+Retrieving listings 50 max price:60 PLZ:  8607, NUMBER of listings retrived: 382
+Retrieving listings 0 max price:80 PLZ:  8607, NUMBER of listings retrived: 385
+Retrieving listings 50 max price:80 PLZ:  8607, NUMBER of listings retrived: 385
+Retrieving listings 0 max price:100 PLZ:  8607, NUMBER of listings retrived: 387
+Retrieving listings 50 max price:100 PLZ:  8607, NUMBER of listings retrived: 387
+Retrieving listings 0 max price:200 PLZ:  8607, NUMBER of listings retrived: 388
+Retrieving listings 50 max price:200 PLZ:  8607, NUMBER of listings retrived: 389
+Retrieving listings 0 max price:300 PLZ:  8607, NUMBER of listings retrived: 390
+Retrieving listings 50 max price:300 PLZ:  8607, NUMBER of listings retrived: 391
+Retrieving listings 0 max price:400 PLZ:  8607, NUMBER of listings retrived: 393
+....
+```
+---
+class: inverse, center, middle
+
+```{r eval=TRUE, tidy=FALSE,echo=F}
+pacman::p_load(leaflet)
+
+abnb2017<-readRDS("airbnb_092017.RDS")
+
+leaflet(data=abnb2017,width = 800)%>%addTiles()%>%
+  addMarkers(~lng, ~lat, popup=~as.character(paste("<h2>",name,"</h2>","id:",id,"<br>Typ:",room_type,"<br>Kapazität:",person_capacity,"<br>Preis (pro Nacht):",price,".-")), clusterOptions=markerClusterOptions())
+
+```
+
+#Airbnb im Kanton Zürich
+[<font color=#FFFFFF>Mitteilung: Airbnb blüht vor allem in den Städten, Dez. 2016</font>](https://statistik.zh.ch/internet/justiz_inneres/statistik/de/aktuell/mitteilungen/2016/airbnb.html).
+
+---
+background-image: url("libs/sticker-01.png")
+background-position: bottom right
+background-size:30%
+
+class: top, left
+
+
+<br>
+
+<font color=#009ee0 size = "30"> <b> Vielen Dank <br>für Ihre Aufmerksamkeit!</b></font> 
+
+<br>
+
+
+https://statistikzh.github.io/SST17  
+
+
+
+
+
+
+<br>
+
+
+Thomas Lo Russo  
+[thomas.lorusso@statistik.ji.zh.ch](mailto:thomas.lorusso@statistik.ji.zh.ch)  
+043 259 75 13
+
+
+<small>Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).</small>
+
