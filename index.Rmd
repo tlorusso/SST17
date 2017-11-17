@@ -31,7 +31,7 @@ Wie kann sie dem Informationsbedürfnis der Gesellschaft auch künftig gerecht w
 --
 Auch über im Internet erhobene Daten (**Web-data**) wurde debatiert:
 
-<blockquote class="twitter-tweet" data-lang="de"><p lang="en" dir="ltr">Web data aren’t going replace official stats but they complement what is already there <a href="https://twitter.com/jonsteinberg?ref_src=twsrc%5Etfw">@jonsteinberg</a> <a href="https://twitter.com/hashtag/powerfromstatistics?src=hash&amp;ref_src=twsrc%5Etfw">#powerfromstatistics</a></p>&mdash; Roeland Beerten (@roelandb) <a href="https://twitter.com/roelandb/status/921002714804445184?ref_src=twsrc%5Etfw">19. Oktober 2017</a></blockquote>
+<blockquote class="twitter-tweet" data-lang="de"><p lang="en" dir="ltr">Web data aren’t going to replace official stats but they complement what is already there <a href="https://twitter.com/jonsteinberg?ref_src=twsrc%5Etfw">@jonsteinberg</a> <a href="https://twitter.com/hashtag/powerfromstatistics?src=hash&amp;ref_src=twsrc%5Etfw">#powerfromstatistics</a></p>&mdash; Roeland Beerten (@roelandb) <a href="https://twitter.com/roelandb/status/921002714804445184?ref_src=twsrc%5Etfw">19. Oktober 2017</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 ---
@@ -74,7 +74,7 @@ Einschätzung zur Situation in der Schweiz:
 
 https://www.mll-news.com/verwertung-fremder-datenbanken-im-schweizer-recht/
 
-Empfehlung: **Verhaltensregeln der Webseiten-anbieter befolgen!**
+Empfehlung: **Verhaltensregeln der Webseiten-Anbieter befolgen!**
 
 Quasi-standard: digitale Hausordnung für Suchroboter
 
